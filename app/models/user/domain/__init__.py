@@ -5,7 +5,7 @@ from utils.db.mixins import TimestampMixin
 
 
 class User(Base, TimestampMixin):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
     
     id = Column(BigInteger, primary_key=True)
     first_name = Column(String)
@@ -15,13 +15,13 @@ class User(Base, TimestampMixin):
     role = Column(String)
     banned = Column(Boolean)
     
-    # email = Column(String)
-    # verified = Column(Boolean)
+    email = Column(String)
+    verified = Column(Boolean)
 
 
-# class MailConfimationCode(Base, DBTool):
-#     __tablename__ = 'mail_confimation_codes'
+class MailConfimationCode(Base):
+    __tablename__ = 'mail_confimation_code'
     
-#     user_id = Column(BigInteger, ForeignKey('users.id'), primary_key=True)
-#     email = Column(String)
-#     code = Column(String)
+    user_id = Column(BigInteger, ForeignKey('user.id'), primary_key=True)
+    email = Column(String)
+    code = Column(String)
