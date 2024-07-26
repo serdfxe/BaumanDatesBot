@@ -32,7 +32,7 @@ class UOW:
 
 class AlchemyUOW(UOW):
     def begin(self):
-        # return
+        return
         session.begin()
 
     async def rollback(self):

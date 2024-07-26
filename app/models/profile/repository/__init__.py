@@ -15,7 +15,7 @@ class ProfileRepo:
         self.session = session
 
     @abstractmethod
-    async def create(self,  id: int, first_name: str, last_name: str, profilename: str, role: str, banned: bool, email: str, verified: bool) -> Profile:
+    async def create(self,  user_id: int, name: str, age: int, sex: str, description: str, photo: str) -> Profile:
         pass
 
     @abstractmethod
@@ -32,8 +32,8 @@ class ProfileRepo:
 
 
 class AlchemyProfileRepo(ProfileRepo):
-    async def create(self,  user_id: int, name: str, description: str, age: str, photo: str) -> Profile:
-        profile = Profile(user_id=user_id, name=name, age=age, photo=photo, description=description)
+    async def create(self,  user_id: int, name: str, age: int, sex: str, description: str, photo: str) -> Profile:
+        profile = Profile(user_id=user_id, name=name, age=age,  sex = sex,  description=description, photo=photo)
 
         await self.save(profile)
 

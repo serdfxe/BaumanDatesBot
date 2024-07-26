@@ -2,6 +2,8 @@ from random import randint
 from pythondi import inject
 
 from app.exceptions import AlreadyExists, InvalidConfirmationCodeError, NotValidEmail
+from app.models.profile.repository import ProfileRepo
+from app.models.profile.schema import FillProfileSchema
 from app.models.user.repository import UserRepo
 from app.models.user.schema import RegisterUserSchema
 
@@ -74,6 +76,13 @@ class ProfileService:
             await repo.set_verified_email(user_id, email)
             
             await uow.commit()
+    
+    @inject()
+    async def fill_profile(self, user_id: int, data: FillProfileSchema, repo: ProfileRepo, uow: UOW):
         
-    async def fill_profile(user_id: int, ):
-        ...
+        async with uow:
+            try:
+                await repo.create(user_id = user_id, name = data.name, age = data.age, sex=data.sex, description=data.description, photo='')
+            except Exception:
+                print("\n\n\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n\n\n")
+            await uow.commit()
