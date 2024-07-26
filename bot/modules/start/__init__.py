@@ -8,6 +8,7 @@ from app.exceptions import AlreadyExists, InvalidConfirmationCodeError, NotValid
 from app.models.profile.schema import FillProfileSchema
 from app.models.user.schema import RegisterUserSchema
 from app.services.profile import ProfileService
+from utils.deb import p
 
 
 start_router = Router(name="start")
@@ -33,8 +34,8 @@ async def start_message_handler(message: Message, state: FSMContext):
 
     
     try:
-        if not await service.registered(message.from_user.id):
-            await service.register(
+        if not service.registered(message.from_user.id):
+            service.register(
                 RegisterUserSchema(
                     id=user.id, 
                     first_name=user.first_name, 
@@ -63,7 +64,7 @@ async def email_handler(message: Message, state: EmailStates):
     service = ProfileService()
     
     try:
-        await service.process_email(message.from_user.id, message.text)
+        service.process_email(message.from_user.id, message.text)
     except AlreadyExists:
         await message.answer("К сожалению пользователь с такой почтой уже существует. Попробуйте ввести дургую почту.")
     except NotValidEmail:
@@ -82,7 +83,7 @@ async def email_confirmation_code_handler(message: Message, state: EmailStates):
     data = await state.get_data()
     
     try:
-        await service.confirm_email(message.from_user.id, data['email'], message.text)
+        service.confirm_email(message.from_user.id, data['email'], message.text)
     except InvalidConfirmationCodeError:
         await message.answer("Неверный код. Попробуйте ещё раз.")
     else:
@@ -144,9 +145,9 @@ async def profile_sex_handler(callback_query: CallbackQuery, state: ProfileState
 
     data = await state.get_data()
 
-    print("\n\n\n\n\n", data, "\n\n\n\n\n")
+    p(data)
 
-    await ProfileService().fill_profile(callback_query.from_user.id, FillProfileSchema(**data))
+    ProfileService().fill_profile(callback_query.from_user.id, FillProfileSchema(**data))
 
     await bot.send_message(callback_query.from_user.id, "Поздравляем! Вы заполнили анкету!")
 

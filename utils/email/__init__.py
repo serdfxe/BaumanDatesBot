@@ -18,6 +18,7 @@ class Email():
 
     
     def send(email: str, body: str, sub: str, is_html=False):
+        return
         smtp = smtplib.SMTP("smtp.timeweb.ru")
         smtp.starttls() 
         print(f'addres = {Email._addres} password = {Email._password}')

@@ -5,50 +5,53 @@ from sqlalchemy import delete, select
 
 from app.models.profile.domain import Profile
 
-from utils.db import session
+from utils.db.session import Session
+from utils.deb import p
 
 
 class ProfileRepo:
     __metaclass__ = ABCMeta
 
     def __init__(self) -> None:
-        self.session = session
+        self.session = Session()
 
     @abstractmethod
-    async def create(self,  user_id: int, name: str, age: int, sex: str, description: str, photo: str) -> Profile:
+    def create(self,  user_id: int, name: str, age: int, sex: str, description: str, photo: str) -> Profile:
         pass
 
     @abstractmethod
-    async def get_all(self) -> List[Profile]:
+    def get_all(self) -> List[Profile]:
         pass
 
     @abstractmethod
-    async def save(self, profile: Profile) -> Profile:
+    def save(self, profile: Profile) -> Profile:
         pass
 
     @abstractmethod
-    async def delete(self, profile: Profile) -> None:
+    def delete(self, profile: Profile) -> None:
         pass
 
 
 class AlchemyProfileRepo(ProfileRepo):
-    async def create(self,  user_id: int, name: str, age: int, sex: str, description: str, photo: str) -> Profile:
+    def create(self,  user_id: int, name: str, age: int, sex: str, description: str, photo: str) -> Profile:
+        p(11)
         profile = Profile(user_id=user_id, name=name, age=age,  sex = sex,  description=description, photo=photo)
+        p(22)
 
-        await self.save(profile)
+        self.save(profile)
 
 
-    async def get_profiles(self) -> List[Profile]:
-        query = await self.session.execute(select(Profile))
+    def get_profiles(self) -> List[Profile]:
+        query = self.session.execute(select(Profile))
 
         return query.scalars().all()
 
 
-    async def save(self, profile: Profile) -> Profile:
+    def save(self, profile: Profile) -> Profile:
         self.session.add(profile)
         
         return profile
 
 
-    async def delete(self, profile: Profile) -> None:
-        await self.session.delete(profile)
+    def delete(self, profile: Profile) -> None:
+        self.session.delete(profile)

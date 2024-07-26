@@ -1,42 +1,46 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 
-from utils.db import session
 
-class UOW:
-    __metaclass__ = ABCMeta
-
+class UOW(ABC):
     def __init__(self):
-        self.session = session
+        self.repo = None
+        self.session = None
+        
+    def __call__(self, repo):
+        self.repo = repo
+        self.session = repo.session
+        
+        return self
 
     @abstractmethod
     def begin(self):
         pass
 
     @abstractmethod
-    async def rollback(self):
+    def rollback(self):
         pass
 
     @abstractmethod
-    async def commit(self):
+    def commit(self):
         pass
 
-    async def __aenter__(self):
+    def __enter__(self):
         self.begin()
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         if exc_type is not None:
-            await self.rollback()
-        # await session.close()
+            self.rollback()
+        # self.session.close()
 
 
 class AlchemyUOW(UOW):
     def begin(self):
+        # self.session.begin()
         return
-        session.begin()
 
-    async def rollback(self):
-        await session.rollback()
+    def rollback(self):
+        self.session.rollback()
 
-    async def commit(self):
-        await session.commit()
+    def commit(self):
+        self.session.commit()
