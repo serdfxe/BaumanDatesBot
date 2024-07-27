@@ -26,7 +26,7 @@ class ProfileStates(StatesGroup):
     sex = State()
 
 
-@start_router.message(Command('start'))
+@start_router.message(Command("start"))
 async def start_message_handler(message: Message, state: FSMContext):
     service = ProfileService()
     

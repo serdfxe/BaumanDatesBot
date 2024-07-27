@@ -1,6 +1,5 @@
-from sqlalchemy import BigInteger, Column, Enum, ForeignKey, Integer, String
+from sqlalchemy import BigInteger, Column, ForeignKey, Integer, String
 from utils.db import Base
-import enum
 
 # class SexEnum(enum.Enum):
 #     male = "Male"
