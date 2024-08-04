@@ -2,6 +2,7 @@ from aiogram import Bot, Dispatcher
 
 from bot.modules.start import start_router
 from bot.modules.support import support_router
+from bot.modules.flow import flow_router
 
 from config import TOKEN
 # from utils.db.middleware import SQLAlchemyMiddleware
@@ -15,7 +16,11 @@ async def main():
     
     # dp.message.middleware(SQLAlchemyMiddleware())
     
-    dp.include_routers(start_router, support_router)
+    dp.include_routers(
+        start_router, 
+        support_router,
+        flow_router,
+    )
 
     init_di()
 

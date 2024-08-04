@@ -1,10 +1,6 @@
-from sqlalchemy import BigInteger, Column, ForeignKey, Integer, String
+from sqlalchemy import BigInteger, Boolean, Column, ForeignKey, Integer, String
 from utils.db import Base
 
-# class SexEnum(enum.Enum):
-#     male = "Male"
-#     female = "Female"
-#     none = ""
 
 class Profile(Base):
     __tablename__ = 'profile'
@@ -16,3 +12,11 @@ class Profile(Base):
     sex = Column(String(10), nullable=False)
     description = Column(String(250))
     photo = Column(String)
+
+
+class ViewedProfile(Base):
+    __tablename__ = 'viewed_profile'
+    
+    observer_id = Column(Integer, ForeignKey('user.id'), nullable=False, primary_key=True)
+    target_id = Column(Integer, ForeignKey('user.id'), nullable=False, primary_key=True)
+    status = Column(Boolean, nullable=False)

@@ -56,7 +56,7 @@ class AlchemyUserRepo(UserRepo):
     def create(self,  id: int, first_name: str, last_name: str, username: str, role: str, banned: bool, email: str, verified: bool) -> User:
         user = User(id=id, first_name=first_name, last_name=last_name, username=username, role=role, banned=banned, email=email, verified=verified)
 
-        self.save(user)
+        return self.save(user)
 
     def get_users(self) -> List[User]:
         query = self.session.execute(select(User))
@@ -72,7 +72,6 @@ class AlchemyUserRepo(UserRepo):
         self.session.delete(user)
 
     def user_exists(self, id: int) -> bool:
-        p("AAAAAAAAAAAAAAAA")
         return self.session.query(User).filter_by(id=id).first()
     
     def email_exists(self, email: str) -> None:

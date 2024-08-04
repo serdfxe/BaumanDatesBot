@@ -8,6 +8,7 @@ from app.exceptions import AlreadyExists, InvalidConfirmationCodeError, NotValid
 from app.models.profile.schema import FillProfileSchema
 from app.models.user.schema import RegisterUserSchema
 from app.services.profile import ProfileService
+from bot.filters.registered import Registered
 from utils.deb import p
 
 
@@ -27,6 +28,7 @@ class ProfileStates(StatesGroup):
 
 
 @start_router.message(Command("start"))
+@start_router.message(~Registered())
 async def start_message_handler(message: Message, state: FSMContext):
     service = ProfileService()
     
@@ -137,15 +139,10 @@ async def profile_description_handler(message: Message, state: ProfileStates):
 
 @start_router.callback_query(lambda c: c.data.startswith('gender_'), ProfileStates.sex)
 async def profile_sex_handler(callback_query: CallbackQuery, state: ProfileStates, bot: Bot):
-
-    
-
     sex = callback_query.data.split("_")[1]
     await state.update_data(sex = sex)
 
     data = await state.get_data()
-
-    p(data)
 
     ProfileService().fill_profile(callback_query.from_user.id, FillProfileSchema(**data))
 

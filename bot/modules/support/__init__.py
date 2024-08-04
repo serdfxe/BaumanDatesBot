@@ -5,7 +5,6 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
 from app.services.support import SupportService
-from utils.deb import p
 
 
 support_router = Router(name = "support")
@@ -26,7 +25,6 @@ async def request_handler(message: Message, state: SupportRequest):
     service = SupportService()
     
     try:
-        p(user.id, request)
         service.register_request(user_id = user.id, request = request)
     except Exception as ex:
         await message.answer("Иди нахуй")
